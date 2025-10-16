@@ -1,0 +1,95 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    /* overflow: hidden dihapus agar bisa scroll */
+}
+
+body {
+    background: url("/assets/img/bg-kbi.jpg") no-repeat center center fixed;
+    background-size: cover;
+    backdrop-filter: brightness(0.85);
+    min-height: 100vh;
+    /* Memastikan body cukup tinggi untuk scroll */
+}
+
+/* Tambahkan ini untuk atur posisi background di mobile */
+@media (max-width: 576px) {
+    body {
+        background: url("/assets/img/bg-kbi-mobile.jpg") no-repeat left center fixed;
+        background-size: cover;
+    }
+}
+
+.card {
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    margin-bottom: 20px;
+    /* Memberi jarak antar card untuk scroll */
+}
+
+.logo img {
+    max-width: 180px;
+}
+
+.credits {
+    color: #ffffff;
+    font-size: 0.875rem;
+    text-align: center;
+    margin-top: 1rem;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(6, 6, 6, 0.3);
+    z-index: -1;
+}
+
+.logo-auth {
+    max-width: 320px;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+    filter: drop-shadow(2px 2px 4px rgba(35, 35, 35, 0.4));
+    margin: 20px 0;
+    /* Memberi jarak untuk scroll */
+}
+
+.logo-auth:hover {
+    transform: scale(1.03);
+}
+
+@media (max-width: 576px) {
+    .logo-auth {
+        max-width: 260px;
+    }
+}
+
+.last-update-text {
+    position: fixed;
+    /* Tetap fixed agar selalu terlihat */
+    bottom: 20px;
+    left: 20px;
+    font-size: 0.85rem;
+    color: #f0f0f0;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 4px 8px;
+    border-radius: 5px;
+}
+
+/* Tambahan untuk konten yang bisa di-scroll */
+.main-content {
+    padding: 20px;
+    min-height: calc(100vh - 100px);
+}

@@ -1,0 +1,288 @@
+
+   
+   /* Header tetap di atas */
+
+    /* Custom untuk layar besar */
+    @media (min-width: 1920px) {
+        .swal2-popup {
+            font-size: 1.5rem !important;
+            /* Perbesar font untuk layar besar */
+        }
+
+        .swal2-title {
+            font-size: 2rem !important;
+            /* Perbesar judul */
+        }
+
+        .swal2-content {
+            font-size: 1.5rem !important;
+            /* Perbesar konten */
+        }
+
+        .swal2-confirm {
+            font-size: 1.25rem !important;
+            /* Perbesar tombol */
+        }
+    }
+
+    /* Responsif untuk layar kecil */
+    @media (max-width: 768px) {
+        .swal2-popup {
+            font-size: 0.875rem !important;
+        }
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+        margin-top: 15px;
+        border-radius: 4px;
+    }
+
+    /* Tabel styling untuk tampilan yang lebih profesional */
+    .table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 0.775rem;
+        /* Ukuran font lebih kecil */
+        border: 1px solid #dee2e6;
+        /* Border tabel lebih halus */
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        /* Bayangan tabel */
+    }
+
+    .table th,
+    .table td {
+        vertical-align: middle;
+        padding: 7px;
+        /* Padding dikurangi untuk tampilan lebih ringkas */
+        text-align: center;
+        border: 1px solid #dee2e6;
+        transition: all 0.3s ease;
+    }
+
+    .table th {
+        background-color: #343a40;
+        /* Warna latar belakang header yang lebih profesional */
+        color: #ffffff;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        font-size: 0.7rem;
+    }
+
+    .table td {
+        background-color: #f8f9fa;
+        /* Latar belakang sel yang lebih lembut */
+        color: #212529;
+    }
+
+    /* Efek hover pada baris tabel */
+    .table tbody tr:hover {
+        background-color: #007bff;
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Tabel bergaris (striped) untuk memudahkan pembacaan */
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #e9ecef;
+    }
+
+    .table-striped tbody tr:nth-of-type(even) {
+        background-color: #ffffff;
+    }
+
+
+    /* Responsif untuk layar kecil */
+    @media (max-width: 768px) {
+        .table td {
+            font-size: 0.75rem;
+            /* Ukuran font lebih kecil untuk layar kecil */
+        }
+
+        .table th {
+            font-size: 0.65rem;
+        }
+
+        .table th,
+        .table td {
+            padding: 8px;
+        }
+    }
+
+    /* Responsif untuk layar besar */
+    @media (min-width: 1920px) {
+        .table {
+            font-size: 1rem;
+        }
+
+        .table th,
+        .table td {
+            padding: 9px;
+        }
+    }
+
+    /* Efek animasi hover */
+    .table-hover tbody tr:hover {
+        background-color: #17a2b8;
+        color: white;
+    }
+
+    /* Header Style */
+    .header {
+        background-color: #ffffff;
+        /* Warna latar belakang header */
+
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        /* Efek bayangan untuk tampilan lebih elegan */
+        padding: 10px 20px;
+        /* Padding untuk memberi ruang di dalam header */
+        transition: background-color 0.3s ease;
+        /* Transisi halus untuk perubahan warna */
+    }
+
+    .header .logo img {
+        height: 40px;
+        /* Sesuaikan ukuran logo */
+        margin-right: 10px;
+        /* Beri sedikit jarak antara logo dan teks */
+        transition: transform 0.3s ease;
+        /* Efek transisi saat hover */
+    }
+
+    .header .logo span {
+        color: rgb(197, 4, 4);
+        /* Warna teks untuk nama masjid */
+        font-weight: 600;
+        /* Tebal font untuk teks */
+        font-size: 18px;
+        /* Ukuran font */
+
+    }
+
+    .header .logo:hover img {
+        transform: scale(1.1);
+        /* Efek perbesaran pada logo saat hover */
+    }
+
+    /* Default style */
+    .toggle-sidebar-btn {
+        transition: transform 0.3s ease;
+        /* Transisi untuk animasi rotasi */
+    }
+
+    /* Rotated state */
+    .sidebar-collapsed .toggle-sidebar-btn {
+        transform: rotate(180deg);
+        /* Rotasi 180 derajat */
+    }
+
+
+    .header-nav ul {
+        display: flex;
+        /* Untuk menyejajarkan item dalam nav */
+        gap: 15px;
+        /* Jarak antar item dalam nav */
+    }
+
+    .header-nav ul li a {
+        color: #7c7f80;
+        /* Warna teks nav */
+        font-size: 16px;
+        /* Ukuran font nav */
+        font-weight: 500;
+        /* Tebal font nav */
+        transition: color 0.3s ease;
+        /* Transisi halus untuk perubahan warna */
+    }
+
+    .header-nav ul li a:hover {
+        color: #e74c3c;
+        /* Warna teks saat hover */
+    }
+
+    #digital-clock {
+        color: #7c7f80;
+        /* Warna teks */
+        font-size: 18px;
+        /* Ukuran font */
+        font-weight: 600;
+        /* Tebal font */
+        letter-spacing: 1px;
+        /* Jarak antar huruf */
+        font-family: 'Courier New', Courier, monospace;
+        /* Font jam digital */
+    }
+
+    .sidebar-nav {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        /* Remove default list styles */
+    }
+
+    .nav-item {
+        position: relative;
+        /* Positioning for hover effect */
+    }
+
+    .nav-link {
+        display: flex;
+        /* Flexbox for horizontal alignment */
+        align-items: center;
+        /* Center align items */
+        padding: 15px 20px;
+        /* Padding for links */
+        color: #aab8c9;
+        /* Default text color */
+        text-decoration: none;
+        /* Remove underline */
+        transition: background-color 0.3s, color 0.3s;
+        /* Smooth transition */
+    }
+
+    .nav-heading {
+        color: #ccf1fa;
+        /* Heading color */
+        padding: 15px 20px;
+        /* Padding for headings */
+        font-weight: bold;
+        /* Bold font for headings */
+    }
+
+    .nav-link.active {
+        background-color: #8393a4;
+        /* Active link background */
+        color: #ecf0f1;
+        /* Active link text color */
+    }
+
+    .nav-link.active i {
+        color: #ecf0f1;
+        /* Active icon color */
+    }
+
+    .nav-link:hover {
+        background-color: #adcbe9;
+        /* Hover background color */
+        color: #ecf0f1;
+        /* Hover text color */
+    }
+
+    .nav-link i {
+        margin-right: 10px;
+        /* Spacing between icon and text */
+        transition: color 0.3s;
+        /* Smooth transition for icons */
+    }
+
+    .nav-link:hover i {
+        color: #ecf0f1;
+        /* Icon color on hover */
+    }
+
+    /* Optional: Add a slight shadow to the sidebar for depth */
+    .sidebar {
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    }

@@ -1,0 +1,46 @@
+   #reader {
+       width: 100% !important;
+       max-width: 100% !important;
+       height: auto !important;
+       min-height: 200px;
+   }
+
+
+   .html5-qrcode-element {
+       font-family: 'Segoe UI', sans-serif !important;
+   }
+
+   #reader__dashboard_section {
+       border: none !important;
+   }
+
+   #reader__scan_region {
+       border-radius: 10px;
+       overflow: hidden;
+   }
+
+   #reader__camera_selection {
+       border: 1px solid #dee2e6;
+       border-radius: 5px;
+       background-color: #f8f9fa;
+       font-size: 14px;
+       color: #212529;
+   }
+
+   #reader__dashboard_section_csr>span {
+       font-size: 12px;
+       color: #999;
+   }
+
+   #reader__stop_button {
+       background-color: #dc3545 !important;
+       border: none !important;
+       color: white !important;
+       font-weight: 500;
+       border-radius: 5px !important;
+       margin-top: 10px;
+   }
+
+   #reader__header_message {
+       display: none !important;
+   }
