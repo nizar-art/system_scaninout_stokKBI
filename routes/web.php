@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DailyStockLogController;
 use App\Http\Controllers\DashboardInOutController;
+use App\Http\Controllers\HistoryScanController;
+use App\Http\Controllers\ImportInStokController;
 use App\Http\Controllers\ScanInController;
 use App\Http\Controllers\ScanOutController;
 use App\Http\Controllers\WorkDaysController;
@@ -36,7 +38,12 @@ Route::middleware(['auth', 'user.only'])->group(function () {
     // 👇 ini jadi halaman awal setelah login (Dashboard)
     Route::get('/dashboard/inout', [DashboardInOutController::class, 'index'])
         ->name('dashboardinout.index');
-    
+    Route::get('/history/scan', [HistoryScanController::class, 'index'])
+        ->name('historyscan.index');
+    Route::get('/historyscan/export', [HistoryScanController::class, 'export'])
+        ->name('historyscan.export');
+    Route::get('/import/in', [ImportInStokController::class, 'index'])
+        ->name('ImportIn.index');
     Route::prefix('scanInStok')
     ->controller(ScanInController::class)
     ->group(function () {

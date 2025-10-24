@@ -1,4 +1,4 @@
-@extends('layouts.app_user')
+@extends('layouts.app_userout')
 
 @section('title', 'Search Part Name & Number')
 

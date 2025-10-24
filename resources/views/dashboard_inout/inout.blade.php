@@ -3,7 +3,7 @@
 @section('title', 'Scan In&Out Stock')
 
 @section('contents')
-<div class="container d-flex flex-column justify-content-center align-items-center" style="min-height: 80vh;">
+<div class="container d-flex flex-column justify-content-center align-items-center" style="min-height: 70vh;">
     <!-- Judul -->
     <div class="text-center mb-5">
         <h1 class="fw-bold text-white">Scan QRCode Stock</h1>

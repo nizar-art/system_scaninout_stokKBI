@@ -6,6 +6,7 @@ use App\Models\Part;
 use App\Models\DailyStockLog;
 use App\Models\RakStock;
 use App\Models\StockScanHistory;
+use App\models\Plant;
 use Illuminate\Http\Request;
 
 class ScanInController extends Controller
@@ -21,43 +22,53 @@ class ScanInController extends Controller
             'inventory_id' => 'required|string'
         ]);
 
-        // Contoh barcode baru: MSN;INV00123:20;2501030001
-        $barcode = $request->inventory_id;
-        $parts = explode(';', $barcode);
+        $barcode = trim($request->inventory_id);
+        $qrcode_raw = $barcode; // Simpan seluruh kode mentah
 
-        if (count($parts) < 3) {
-            return back()->with('error', 'Format barcode tidak valid.');
+        $parts = array_filter(explode(';', $barcode)); // buang kosong
+        $invId = null;
+        $qty = null;
+
+        // 🔹 1. Cari bagian yang mengandung tanda ":"
+        foreach ($parts as $part) {
+            if (str_contains($part, ':')) {
+                [$invId, $qtyPart] = explode(':', $part, 2);
+                $qty = is_numeric($qtyPart) ? (int) $qtyPart : null;
+                break;
+            }
         }
 
-        [$prefix, $middle, $extra] = $parts;
-
-        // middle = INV00123:20 â†’ pisahkan id part dan qty
-        $middleParts = explode(':', $middle);
-
-        if (count($middleParts) < 2) {
-            return back()->with('error', 'Format bagian tengah barcode tidak valid. Harus seperti INV00123:20');
+        // 🔹 2. Kalau gak ketemu tanda ":" → ambil bagian kedua, atau pertama
+        if (!$invId) {
+            if (isset($parts[1])) {
+                $invId = $parts[1];
+            } else {
+                $invId = $parts[0] ?? null;
+            }
         }
 
-        [$invId, $qty] = $middleParts;
+        if (!$invId) {
+            return back()->with('error', 'Format barcode tidak bisa dibaca. Pastikan mengandung kode part.');
+        }
 
-        // Cari part berdasarkan Inv_id
+        // 🔍 3. Cari part di database
         $inventoryPart = Part::where('Inv_id', $invId)->first();
         if (!$inventoryPart) {
-            return back()->with('error', "Inventory ID {$invId} tidak ditemukan .");
+            return back()->with('error', "Inventory ID {$invId} tidak ditemukan.");
         }
 
-        // Simpan data scan di session sementara
+        // 💾 4. Simpan ke session
         session([
             'scan_data' => [
-                'qrcode_raw' => $extra,     // sekarang ambil dari bagian ketiga barcode
-                'stok_inout' => (int) $qty,
+                'qrcode_raw' => $qrcode_raw,
+                'stok_inout' => $qty ?: null,
             ]
         ]);
 
-        // Redirect ke halaman konfirmasi / edit laporan
+        // 🚀 5. Arahkan ke halaman edit laporan
         return redirect()->route('scan.edit.report.in', ['inventory_id' => $inventoryPart->id]);
     }
- 
+
 
     public function editReportin($inventory_id)
     {
@@ -119,14 +130,15 @@ class ScanInController extends Controller
 
         \DB::transaction(function () use ($request, $part, $rak, &$totalStokSesudah) {
 
-            // 🔹 Ambil log sesuai inventory & area yang dipilih
-            $logs = DailyStockLog::where('id_inventory', $part->id)
+            // 🔹 Ambil log terakhir untuk inventory & area yang dipilih
+            $log = DailyStockLog::where('id_inventory', $part->id)
                 ->where('id_area_head', $request->area_id)
-                ->get();
+                ->latest('id')
+                ->first();
 
             // 🔸 Jika belum ada log untuk area ini → buat baru
-            if ($logs->isEmpty()) {
-                $newLog = DailyStockLog::create([
+            if (!$log) {
+                $log = DailyStockLog::create([
                     'id_inventory' => $part->id,
                     'id_area_head' => $request->area_id,
                     'prepared_by' => auth()->id(),
@@ -134,22 +146,18 @@ class ScanInController extends Controller
                     'status' => 'OK',
                     'date' => now()->toDateString(),
                 ]);
-
-                $logs = collect([$newLog]);
             }
 
-            // 🔹 Update stok untuk semua log di area tersebut
-            foreach ($logs as $log) {
-                $stok_baru = ($request->status === 'IN')
-                    ? $log->Total_qty + $request->stok_inout
-                    : max(0, $log->Total_qty - $request->stok_inout);
+            // 🔹 Update stok log terakhir
+            $stok_baru = ($request->status === 'IN')
+                ? $log->Total_qty + $request->stok_inout
+                : max(0, $log->Total_qty - $request->stok_inout);
 
-                $log->update([
-                    'Total_qty' => $stok_baru,
-                    'prepared_by' => auth()->id(),
-                ]);
-            }
- 
+            $log->update([
+                'Total_qty' => $stok_baru,
+                'prepared_by' => auth()->id(),
+            ]);
+
             // 🔹 Update stok di rak
             if ($request->status === 'IN') {
                 $rak->stok += $request->stok_inout;
@@ -161,7 +169,7 @@ class ScanInController extends Controller
             // 🔹 Simpan ke history
             StockScanHistory::create([
                 'id_inventory' => $part->id,
-                'id_daily_stock_log' => $logs->first()->id ?? null,
+                'id_daily_stock_log' => $log->id,
                 'id_rak_stock' => $rak->id,
                 'user_id' => auth()->id(),
                 'qrcode_raw' => $request->qrcode_raw,
@@ -174,6 +182,7 @@ class ScanInController extends Controller
             $totalStokSesudah = DailyStockLog::where('id_inventory', $part->id)->sum('Total_qty');
         });
 
+
         return redirect()->route('scanInStok.index')
             ->with('success', "Stok berhasil ditambahkan! Total keseluruhan sekarang: {$totalStokSesudah}");
     }
@@ -184,7 +193,7 @@ class ScanInController extends Controller
         $query = trim($request->input('query'));
         $perPage = (int) $request->input('per_page', 10);
 
-        // Jika query kosong, jangan langsung ambil semua data
+        // Jika query kosong
         if (empty($query)) {
             if ($request->ajax()) {
                 return response()->json([
@@ -201,26 +210,31 @@ class ScanInController extends Controller
             return view('scanin_stok.search', ['results' => collect()]);
         }
 
-        // Ambil data Part beserta relasi customer
-        $results = Part::with(['customer:id,Customer_name'])
+        // Ambil data Part beserta relasi plant
+        $results = Part::with(['plant'])
             ->where(function ($q) use ($query) {
                 $q->where('Part_name', 'like', '%' . $query . '%')
                 ->orWhere('Part_number', 'like', '%' . $query . '%')
                 ->orWhere('Inv_id', 'like', '%' . $query . '%');
             })
-            ->select('id', 'Inv_id', 'Part_name', 'Part_number')
+            ->select('id', 'Inv_id', 'Part_name', 'Part_number', 'id_plan')
             ->paginate($perPage);
 
-        // Jika request dari AJAX (misalnya untuk live search)
+        // Jika request dari AJAX
         if ($request->ajax()) {
             return response()->json([
                 'results' => $results->map(function ($item) {
+                    // Ambil total stok dari DailyStockLog
+                    $totalQty = \App\Models\DailyStockLog::where('id_inventory', $item->id)
+                        ->sum('Total_qty');
+
                     return [
                         'id' => $item->id,
                         'inventory_id' => $item->Inv_id,
                         'part_name' => $item->Part_name,
                         'part_number' => $item->Part_number,
-                        'customer_name' => optional($item->customer)->Customer_name ?? '-',
+                        'plant_name' => optional($item->plant)->name ?? '-',
+                        'total_qty' => $totalQty,
                     ];
                 }),
                 'pagination' => [
@@ -235,6 +249,4 @@ class ScanInController extends Controller
         // View hasil pencarian
         return view('scanin_stok.search', compact('results'));
     }
-
-
 }

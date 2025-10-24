@@ -3,8 +3,9 @@
     @include('layouts.head_user')
 
     <body>
-        <section class="section">
+        @include('layouts.navbar_dashboard')
 
+        <section class="section">
             {{-- alert --}}
             @if (session('notfound'))
                 <div class="container mt-3">

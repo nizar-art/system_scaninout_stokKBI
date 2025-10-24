@@ -57,13 +57,34 @@
 
                 <!-- Input Jumlah / Rak / Tanggal -->
                 <div class="row g-3">
+                    <!-- Jumlah Tambah -->
                     <div class="col-md-4">
-                    <label>Jumlah Tambah</label>
-                        <input type="number" name="stok_inout_display" id="stok_inout_display"
-                            value="{{ $stok_inout ?? 20 }}" class="form-control bg-light" readonly>
-                        <input type="hidden" name="stok_inout" value="{{ $stok_inout ?? 20 }}">
+                        <label>Jumlah Tambah</label>
+                        @php
+                            // Kalau stok_inout dari barcode → readonly, kalau kosong → user isi manual
+                            $readonly = !is_null($stok_inout);
+                            $stokValue = $stok_inout ?? '';
+                        @endphp
+
+                        <input 
+                            type="number" 
+                            name="stok_inout_display" 
+                            id="stok_inout_display"
+                            value="{{ old('stok_inout_display', $stokValue) }}" 
+                            class="form-control {{ $readonly ? 'bg-light' : '' }}" 
+                            {{ $readonly ? 'readonly' : 'required' }}
+                            placeholder="{{ $readonly ? '' : 'Masukkan jumlah stok' }}"
+                        >
+
+                        <input 
+                            type="hidden" 
+                            name="stok_inout" 
+                            id="stok_inout" 
+                            value="{{ old('stok_inout', $stokValue) }}"
+                        >
                     </div>
 
+                    <!-- Lokasi Area -->
                     <div class="col-md-4">
                         <label>Lokasi Area</label>
                         <select name="area_id" class="form-control" required>
@@ -74,8 +95,9 @@
                         </select>
                     </div>
 
+                    <!-- Lokasi Rak -->
                     <div class="col-md-4">
-                    <label>Lokasi Rak</label>
+                        <label>Lokasi Rak</label>
                         <select name="rak_id" id="rak_id" class="form-select" required>
                             <option value="">-- Pilih Rak --</option>
                             @foreach ($raks as $rak)
@@ -86,9 +108,19 @@
                         </select>
                     </div>
 
+                    <!-- Tanggal Scan -->
                     <div class="col-md-4">
-                    <label>Tanggal Scan</label>
+                        <label>Tanggal Scan</label>
                         <input type="text" class="form-control bg-light" value="{{ now()->format('Y-m-d H:i:s') }}" readonly>
+                    </div>
+
+                    <!-- QR Code -->
+                    <div class="col-md-4">
+                        <label>QR Code</label>
+                        @php
+                            $qrReadonly = !empty($qrcode_raw);
+                            $qrValue = $qrcode_raw ?? '';
+                        @endphp
                     </div>
                 </div>
 
@@ -106,4 +138,26 @@
         </div>
     </div>
 </div>
+
+<!-- Sinkronisasi input hidden -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const qtyDisplay = document.getElementById('stok_inout_display');
+    const qtyHidden = document.getElementById('stok_inout');
+    const qrDisplay = document.getElementById('qrcode_raw_display');
+    const qrHidden = document.getElementById('qrcode_raw');
+
+    if (qtyDisplay && qtyHidden) {
+        qtyDisplay.addEventListener('input', function() {
+            qtyHidden.value = this.value;
+        });
+    }
+
+    if (qrDisplay && qrHidden) {
+        qrDisplay.addEventListener('input', function() {
+            qrHidden.value = this.value;
+        });
+    }
+});
+</script>
 @endsection
