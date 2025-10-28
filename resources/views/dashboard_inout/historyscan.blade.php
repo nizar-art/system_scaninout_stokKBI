@@ -1,6 +1,6 @@
 @extends('layouts.app_userinout')
 
-@section('title', 'History Scan Stock')
+@section('title', 'History Transaksi Stock')
 
 @section('contents')
 <div class="container py-4">
