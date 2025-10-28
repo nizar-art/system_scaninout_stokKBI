@@ -47,7 +47,7 @@
             <i class="fas fa-boxes me-1"></i> Import In Stok
         </a>
         <a href="{{ route('historyscan.index')}}" class="text-white text-decoration-none">
-            <i class="fas fa-history me-1"></i> History Scan
+            <i class="fas fa-history me-1"></i> History Transaksi
         </a>
     </div>
 </div>
@@ -78,7 +78,7 @@
             </li>
             <li class="mb-3">
                 <a href="{{ route('historyscan.index')}}" class="text-white text-decoration-none d-flex align-items-center">
-                    <i class="fas fa-history me-2"></i> History Scan
+                    <i class="fas fa-history me-2"></i> History Transaksi
                 </a>
             </li>
             <li class="border-top border-light pt-3 mt-3">

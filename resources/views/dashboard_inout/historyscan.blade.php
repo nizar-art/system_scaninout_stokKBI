@@ -7,15 +7,15 @@
 
     <!-- Header -->
     <div class="data-header mb-4 p-3 p-md-4 rounded shadow-sm">
-        <h4 class="fw-semibold text-white mb-1">History Scan Stock</h4>
-        <p class="text-light mb-0" style="opacity: 0.8;">Filter dan lihat riwayat hasil scan stok.</p>
+        <h4 class="fw-semibold text-white mb-1">History Transaksi Stock</h4>
+        <p class="text-light mb-0" style="opacity: 0.8;">Filter dan lihat riwayat hasil scan dan import stok.</p>
     </div>
 
     <!-- Card -->
     <div class="table-container">
         <div class="mb-3">
             <h5 class="text-white mb-2 d-flex align-items-center gap-2">
-                Data History Scan
+                Data History Transaksi
             </h5>
 
             <div class="mt-2">

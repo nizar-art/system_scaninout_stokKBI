@@ -44,6 +44,18 @@ Route::middleware(['auth', 'user.only'])->group(function () {
         ->name('historyscan.export');
     Route::get('/import/in', [ImportInStokController::class, 'index'])
         ->name('ImportIn.index');
+    // Proses upload dan preview file Excel
+    Route::post('/import-in-stok/preview', [ImportInStokController::class, 'preview'])
+        ->name('importinstok.preview');
+    Route::post('/importinstok/cancel', [ImportInStokController::class, 'cancel'])
+        ->name('importinstok.cancel');
+    // Simpan data hasil import ke database
+    Route::post('/import-in-stok/store', [ImportInStokController::class, 'store'])
+        ->name('importinstok.store');
+    // Download template Excel
+    Route::get('/import-in-stok/download-template', [ImportInStokController::class, 'downloadTemplate'])
+        ->name('importinstok.downloadTemplate');
+
     Route::prefix('scanInStok')
     ->controller(ScanInController::class)
     ->group(function () {

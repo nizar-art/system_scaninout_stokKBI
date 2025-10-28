@@ -7,67 +7,105 @@
 
     <!-- Header -->
     <div class="data-header mb-4 p-3 p-md-4 rounded shadow-sm text-center">
-        <!-- Judul Utama -->
         <h4 class="fw-semibold text-white mb-2">Import In Stok</h4>
-
-        <!-- Label Pengarah -->
         <p class="text-light mb-3" style="opacity: 0.85;">
             Gunakan fitur ini untuk melakukan import data stok dari file Excel atau CSV.
         </p>
 
         <!-- Tombol Import -->
-        <button class="btn btn-success fw-semibold px-4 py-2">
+        <button id="btnImport" class="btn btn-success fw-semibold px-4 py-2" data-bs-toggle="modal" data-bs-target="#importModal">
             <i class="bi bi-upload me-2"></i> Import
         </button>
     </div>
 
-
-    <!-- Card -->
+    <!-- Container Data Preview -->
     <div class="table-container">
         <div class="mb-3">
             <h5 class="text-white mb-2 d-flex align-items-center gap-2">
                 Data Yang Akan Di Import
             </h5>
         </div>
-        
-        {{-- <!-- Items per page -->
-        <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
-            <div class="d-flex align-items-center gap-2">
-                <label for="perPage" class="text-light mb-0">Items per page:</label>
-                <select id="perPage" class="form-select form-select-sm d-inline-block w-auto">
-                    <option value="10">10</option>
-                    <option value="25" selected>25</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                </select>
+
+        @if(session('preview_instok'))
+            <div class="table-responsive mt-3">
+                <table class="table table-bordered text-white align-middle">
+                    <thead class="bg-primary">
+                        <tr>
+                            <th>No</th>
+                            <th>Inventory ID</th>
+                            <th>Status</th>
+                            <th>Jumlah</th>
+                            <th>Area</th>
+                            <th>Rak</th>
+                            <th>Tanggal Import</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(session('preview_instok') as $i => $row)
+                        <tr>
+                            <td>{{ $i+1 }}</td>
+                            <td>{{ $row['inventory_id'] }}</td>
+                            <td>{{ $row['status'] }}</td>
+                            <td>{{ $row['jumlah'] }}</td>
+                            <td>{{ $row['nama_area'] }}</td>
+                            <td>{{ $row['rak_name'] }}</td>
+                            <td>{{ $row['tanggal_scan'] }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
-        </div>
 
-        <!-- Table -->
-        <div class="table-responsive">
-            <table class="custom-table w-100" id="historyTable">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Inventory ID</th>
-                        <th>Prepared By</th>
-                        <th>QR Code</th>
-                        <th class="text-center">Jumlah</th>
-                        <th class="text-center">Status</th>
-                        <th>Tanggal Scan</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                </tbody>
-            </table>
-        </div>
+            <div class="text-center mt-3">
+                <form id="importFormFinal" action="{{ route('importinstok.store') }}" method="POST" class="d-inline">
+                    @csrf
+                    <button type="submit" class="btn btn-primary px-4 py-2 me-2">
+                        <i class="bi bi-upload me-2"></i> Import Sekarang
+                    </button>
+                </form>
 
-        <!-- Pagination -->
-        <div class="pagination-wrapper d-flex justify-content-between align-items-center mt-3 flex-wrap">
-            <div id="pagination-info"></div>
-            <ul id="pagination-buttons" class="pagination mb-0"></ul>
-        </div> --}}
+                <!-- Tombol Cancel Reset -->
+                <form action="{{ route('importinstok.cancel') }}" method="POST" class="d-inline">
+                    @csrf
+                    <button type="submit" class="btn btn-danger px-4 py-2">
+                        <i class="bi bi-x-circle me-2"></i> Cancel
+                    </button>
+                </form>
+            </div>
+        @endif
     </div>
+</div>
+
+<!-- ================= MODAL IMPORT ================= -->
+<div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius: 12px; overflow: hidden;">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title fw-semibold" id="importModalLabel">Import In Stock from Excel</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="importFormPreview" action="{{ route('importinstok.preview') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        <div class="modal-body">
+            <div class="mb-3">
+                <label class="form-label fw-semibold" style="color: black;">Upload Excel File</label>
+                <input type="file" name="file" id="fileInput" class="form-control" accept=".xlsx,.xls,.csv" required>
+            </div>
+            <p class="small text-dark mb-2" >
+                *Download Template Excel Import: 
+                <a href="{{ route('importinstok.downloadTemplate') }}" class="text-warning text-decoration-none fw-semibold">
+                    <i class="bi bi-download"></i> Klik di sini
+                </a>
+            </p>
+            <p class="small text-dark mb-0">Format kolom: inventory_id, status, jumlah, nama_area, rak_name, tanggal_scan</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Tutup</button>
+            <button type="submit" id="submitImport" class="btn btn-success px-3">Preview</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 
 <!-- ================= CSS ================= -->
@@ -82,76 +120,6 @@
         padding: 1.5rem;
         box-shadow: 0 1px 4px rgba(0,0,0,0.2);
     }
-    .custom-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 0.95rem;
-        color: #fff;
-    }
-    .custom-table th, .custom-table td {
-        padding: 0.75rem 1rem;
-    }
-    .custom-table thead th {
-        border-bottom: 2px solid #6e6d6d;
-        background-color: #032950;
-        font-weight: 600;
-    }
-    .custom-table tbody tr {
-        border-bottom: 1px solid #a3a3a3;
-    }
-    .custom-table tbody tr:hover {
-        background-color: #032950;
-    }
-    .custom-table tbody tr:nth-child(even) {
-        background-color: #35495e;
-    }
-
-    .status-badge {
-        display: inline-block;
-        padding: 4px 10px;
-        border-radius: 6px;
-        font-size: 0.85rem;
-        font-weight: 500;
-    }
-    .status-in {
-        background-color: #145a32;
-        color: #fff;
-    }
-    .status-out {
-        background-color: #7b241c;
-        color: #fff;
-    }
-
-    /* Pagination Styling */
-    .pagination-wrapper {
-        width: 100%;
-    }
-    #pagination-info {
-        font-size: 1rem;
-        color: #fff;
-    }
-    .pagination .page-link {
-        color: #0d6efd;
-        border: 1px solid #dee2e6;
-        background: #fff;
-        border-radius: 6px;
-        padding: 5px 10px;
-    }
-    .pagination .page-item.active .page-link {
-        background-color: #0d6efd;
-        color: #fff;
-        border-color: #0d6efd;
-    }
-    .pagination .page-link:hover {
-        background-color: #f1f3f5;
-        color: #0a58ca;
-    }
-    .pagination .page-item.disabled .page-link {
-        background-color: #e9ecef;
-        color: #6c757d;
-    }
-
-    /* Import Button */
     .btn-success {
         background-color: #28a745;
         border: none;
@@ -161,4 +129,101 @@
         background-color: #218838;
     }
 </style>
+
+<!-- ================= JAVASCRIPT ================= -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 🔹 File preview info
+    const fileInput = document.getElementById('fileInput');
+    if (fileInput) {
+        fileInput.addEventListener('change', function() {
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                Swal.fire({
+                    icon: "info",
+                    title: "File Siap",
+                    text: `File "${file.name}" siap untuk di-preview.`,
+                    confirmButtonText: "OK"
+                });
+            }
+        });
+    }
+
+    // 🔹 Konfirmasi sebelum import
+    const importFormFinal = document.getElementById('importFormFinal');
+    if (importFormFinal) {
+        importFormFinal.addEventListener('submit', function(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: "Konfirmasi Import",
+                text: "Apakah Anda yakin ingin mengimport semua data ini ke database?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Ya, Import Sekarang",
+                cancelButtonText: "Batal",
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: "Mengimport...",
+                        text: "Mohon tunggu sebentar...",
+                        icon: "info",
+                        showConfirmButton: false,
+                        allowOutsideClick: false
+                    });
+
+                    e.target.submit();
+                }
+            });
+        });
+    }
+});
+</script>
+
+<!-- 🔹 ALERT DARI SESSION (Success / Error / Info) -->
+@if (session('success'))
+<script>
+Swal.fire({
+    icon: "success",
+    title: "Berhasil!",
+    text: "{{ session('success') }}",
+    confirmButtonText: "OK"
+});
+</script>
+@endif
+
+@if (session('error'))
+<script>
+Swal.fire({
+    icon: "error",
+    title: "Gagal!",
+    text: "{{ session('error') }}",
+    confirmButtonText: "OK"
+});
+</script>
+@endif
+
+@if (session('info'))
+<script>
+Swal.fire({
+    icon: "info",
+    title: "Informasi",
+    text: "{{ session('info') }}",
+    confirmButtonText: "OK"
+});
+</script>
+@endif
+@if(session('import_fail_details'))
+    <div class="alert alert-warning mt-4">
+        <h6 class="fw-semibold"><i class="bi bi-exclamation-triangle me-2"></i>Beberapa data gagal diimport:</h6>
+        <ul class="mb-0 small">
+            @foreach (session('import_fail_details') as $msg)
+                <li>{{ $msg }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 @endsection
+
