@@ -96,13 +96,8 @@ class ScanInController extends Controller
             $raks = RakStock::where('id_inventory', $part->id)->get();
         }
 
-        // 🔹 Ambil area yang muncul di DailyStockLog untuk inventory ini
-        $areas = \App\Models\HeadArea::whereIn('id', function ($query) use ($part) {
-            $query->select('id_area_head')
-                ->from('tbl_daily_stock_logs')
-                ->where('id_inventory', $part->id)
-                ->whereNotNull('id_area_head');
-        })->get();
+        // 🔹 Ambil semua area
+        $areas = \App\Models\HeadArea::all();
 
         return view('scanin_stok.tambahstock', compact(
             'part',
@@ -113,6 +108,7 @@ class ScanInController extends Controller
             'areas'
         ));
     }
+
 
     public function storeHistoryin(Request $request, $inventory_id)
     {
