@@ -96,8 +96,10 @@ class ScanInController extends Controller
             $raks = RakStock::where('id_inventory', $part->id)->get();
         }
 
-        // 🔹 Ambil semua area
-        $areas = \App\Models\HeadArea::all();
+        // 🔹 Ambil area berdasarkan plan yang login
+        $selectedPlanId = session('selected_plan_id');
+
+        $areas = \App\Models\HeadArea::where('id_plan', $selectedPlanId)->get();
 
         return view('scanin_stok.tambahstock', compact(
             'part',
@@ -108,7 +110,6 @@ class ScanInController extends Controller
             'areas'
         ));
     }
-
 
     public function storeHistoryin(Request $request, $inventory_id)
     {
