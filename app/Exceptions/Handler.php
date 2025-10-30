@@ -12,7 +12,7 @@ class Handler extends ExceptionHandler
     {
         // Handle 419 Page Expired
         if ($exception instanceof \Illuminate\Session\TokenMismatchException) {
-            return redirect()->route('admin.login')->with('warning', 'Session expired. Please login again.');
+            return redirect()->route('user.login')->with('warning', 'Session expired. Please login again.');
         }
 
         return parent::render($request, $exception);
