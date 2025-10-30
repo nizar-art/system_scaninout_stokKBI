@@ -15,12 +15,7 @@ class Authenticate extends Middleware
         if (!$request->expectsJson()) {
             session()->flash('expired', 'Session Anda telah habis. Silakan login kembali.');
 
-            if ($request->is('user/*')) {
-                return route('user.login');
-            }
-
-            return route('admin.login');
+            return route('user.login');
         }
     }
-
 }
