@@ -35,8 +35,25 @@ class StockScanHistoryExport implements FromCollection, WithHeadings, WithMappin
             $query->where('status', $this->filters['status']);
         }
 
-        if (!empty($this->filters['scan_date'])) {
-            $query->whereDate('scanned_at', $this->filters['scan_date']);
+        // ✅ Filter Date Range
+        if (!empty($this->filters['date_range'])) {
+            $dates = explode(" to ", $this->filters['date_range']);
+
+            if (count($dates) === 1) {
+                // Hanya 1 tanggal
+                $query->whereDate('scanned_at', $dates[0]);
+            }
+
+            if (count($dates) === 2) {
+                // Range 2 tanggal
+                $start = $dates[0];
+                $end = $dates[1];
+
+                $query->whereBetween('scanned_at', [
+                    $start . ' 00:00:00',
+                    $end . ' 23:59:59',
+                ]);
+            }
         }
 
         return $query->orderBy('scanned_at', 'desc')->get();

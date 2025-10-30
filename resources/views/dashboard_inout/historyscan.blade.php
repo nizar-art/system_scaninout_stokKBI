@@ -33,7 +33,7 @@
                 <div class="col-md-3">
                     <label for="inventory_id" class="form-label text-light mb-1">Inventory ID</label>
                     <input type="text" id="inventory_id" name="inventory_id" class="form-control"
-                        placeholder="Ketik atau scan QR"
+                        placeholder="Cari Inventory ID"
                         value="{{ request('inventory_id') }}">
                 </div>
 
