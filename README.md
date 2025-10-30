@@ -1,11 +1,24 @@
-# 📦 STO Management System
+# 📦 Scan In-Out Stock Management System
 
-STO Management System adalah aplikasi web yang digunakan untuk mengelola inventory dan laporan STO (Stock Take Operation). Aplikasi ini memungkinkan pengguna untuk mencari, menambah, mengedit, menghapus, dan mengekspor data inventory dan laporan STO.
+Scan In-Out Stock Management System adalah aplikasi web untuk mengelola keluar-masuknya stok barang secara efisien menggunakan pemindaian barcode. Sistem ini dirancang untuk mempermudah proses pencatatan transaksi, pelacakan riwayat stok, serta ekspor dan impor data secara otomatis.
 
-## ✨ Fitur
+## ✨ Fitur Utama
 
-- 🔍 **Pencarian**: Pengguna dapat mencari inventory berdasarkan nama bagian atau nomor bagian.
-- 📝 **Manajemen Laporan**: Pengguna dapat menambah, mengedit, dan menghapus laporan STO.
-- 📊 **Ekspor ke Excel**: Pengguna dapat mengekspor laporan yang dipilih ke file Excel.
-- 🖨️ **Cetak Laporan**: Pengguna dapat mencetak laporan STO dalam format PDF dengan kode QR.
-- 📷 **Scan Barcode**: Pengguna dapat memindai barcode untuk mencari inventory dengan cepat.
+* 🔍 Pencarian Cepat
+  Cari data stok berdasarkan nama barang, kode, atau nomor bagian dengan mudah.
+
+* 📦 Scan In & Out Stok
+  Lakukan pencatatan barang masuk dan keluar menggunakan barcode scanner** agar proses lebih cepat dan akurat.
+
+* 🧾 Riwayat Transaksi
+  Setiap transaksi barang masuk dan keluar tercatat secara otomatis lengkap dengan waktu, pengguna, dan jumlah stok yang berubah.
+
+* 📥 Import Data
+  Impor data stok atau daftar barang dari file Excel/CSV untuk mempercepat input awal atau pembaruan massal.
+
+* 📤 Export Data
+  Ekspor laporan stok atau riwayat transaksi ke file Excel untuk kebutuhan dokumentasi atau analisis.
+
+* 👥 Manajemen Pengguna (Opsional)
+  Batasi akses dan lacak aktivitas pengguna berdasarkan peran, seperti admin dan operator gudang.
+
