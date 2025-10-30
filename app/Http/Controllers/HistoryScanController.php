@@ -36,9 +36,25 @@ class HistoryScanController extends Controller
             $query->where('status', $request->status);
         }
 
-        // 🗓️ Filter berdasarkan satu tanggal scan (scanned_at)
-        if ($request->filled('scan_date')) {
-            $query->whereDate('scanned_at', $request->scan_date);
+        // 🗓️ Filter berdasarkan rentang tanggal scan (scanned_at)
+        if ($request->filled('date_range')) {
+            $dates = explode(" to ", $request->date_range);
+
+            // Kalau hanya 1 tanggal
+            if (count($dates) === 1) {
+                $query->whereDate('scanned_at', $dates[0]);
+            }
+
+            // Kalau rentang 2 tanggal
+            if (count($dates) === 2) {
+                $start = $dates[0];
+                $end = $dates[1];
+
+                $query->whereBetween('scanned_at', [
+                    $start . ' 00:00:00',
+                    $end . ' 23:59:59',
+                ]);
+            }
         }
 
         // 🔽 Urutkan berdasarkan waktu scan terbaru

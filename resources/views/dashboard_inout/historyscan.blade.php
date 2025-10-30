@@ -59,10 +59,11 @@
                 </div>
 
                 <div class="col-md-3">
-                    <label for="scan_date" class="form-label text-light mb-1">Tanggal Scan</label>
-                    <input type="date" id="scan_date" name="scan_date" class="form-control"
-                        value="{{ request('scan_date') }}">
+                    <label class="form-label text-light mb-1">Tanggal Scan</label>
+                    <input type="text" id="date_range" class="form-control"
+                        name="date_range" value="{{ request('date_range') }}" placeholder="Select date range">
                 </div>
+
 
                 <div class="col-md-3 d-flex gap-2">
                     <button type="submit" class="btn btn-primary flex-fill">Filter</button>
@@ -132,6 +133,9 @@
 </div>
 
 <!-- ================= JavaScript Pagination ================= -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const rows = Array.from(document.querySelectorAll("#tableBody tr"));
@@ -231,6 +235,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     renderTable();
+});
+flatpickr("#date_range", {
+    mode: "range",
+    dateFormat: "Y-m-d",
+    defaultDate: "{{ request('date_range') }}" || new Date(),
 });
 </script>
 
