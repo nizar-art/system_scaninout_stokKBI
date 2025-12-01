@@ -102,11 +102,12 @@
                             <option value="">-- Pilih Rak --</option>
                             @foreach ($raks as $rak)
                                 <option value="{{ $rak->id }}">
-                                    {{ $rak->rak_name }} (Stok: {{ $rak->stok }})
+                                    {{ $rak->headRak->name_rak }} (Stok: {{ $rak->stok }})
                                 </option>
                             @endforeach
                         </select>
                     </div>
+
 
                     <!-- Tanggal Scan -->
                     <div class="col-md-4">

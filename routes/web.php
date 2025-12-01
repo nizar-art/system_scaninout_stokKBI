@@ -73,6 +73,9 @@ Route::middleware(['auth', 'user.only'])->group(function () {
 
         // Simpan hasil penambahan stok ke database
         Route::post('/store/{inventory_id}', 'storeHistoryin')->name('scan.store.history.in');
+
+        Route::post('/rak/add/{inventory_id}', 'addRak')->name('rak.add');
+
     });
 
     Route::prefix('scanOutStok')

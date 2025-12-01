@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Part;
 use App\Models\DailyStockLog;
+use App\Models\HeadRak;
 use App\Models\RakStock;
 use App\Models\StockScanHistory;
 use App\models\Plant;
@@ -81,24 +82,31 @@ class ScanInController extends Controller
         $qrcode_raw = session('scan_data.qrcode_raw');
         $stok_inout = session('scan_data.stok_inout');
 
-        // 🔹 Ambil daftar rak
-        $raks = RakStock::where('id_inventory', $part->id)->get();
+        // 🔹 Ambil semua HeadRak aktif (ubah filter jika mau ambil semua)
+        $headRaks = \App\Models\HeadRak::where('status', 'aktif')->get();
 
-        // Kalau belum ada rak, buat otomatis Rak 1–5
-        if ($raks->isEmpty()) {
-            foreach (['Rak 1', 'Rak 2', 'Rak 3', 'Rak 4', 'Rak 5'] as $rakName) {
+        // 🔹 Pastikan setiap head_rak punya record di tbl_rak_stock untuk inventory ini
+        foreach ($headRaks as $head) {
+            $exists = RakStock::where('id_inventory', $part->id)
+                ->where('id_rak_head', $head->id)
+                ->exists();
+
+            if (! $exists) {
                 RakStock::create([
                     'id_inventory' => $part->id,
-                    'rak_name' => $rakName,
+                    'id_rak_head' => $head->id,
                     'stok' => 0,
                 ]);
             }
-            $raks = RakStock::where('id_inventory', $part->id)->get();
         }
+
+        // 🔹 Ambil rak (dengan relasi headRak) untuk inventory ini
+        $raks = RakStock::with('headRak')
+            ->where('id_inventory', $part->id)
+            ->get();
 
         // 🔹 Ambil area berdasarkan plan yang login
         $selectedPlanId = session('selected_plan_id');
-
         $areas = \App\Models\HeadArea::where('id_plan', $selectedPlanId)->get();
 
         return view('scanin_stok.tambahstock', compact(
@@ -110,6 +118,7 @@ class ScanInController extends Controller
             'areas'
         ));
     }
+
 
     public function storeHistoryin(Request $request, $inventory_id)
     {
